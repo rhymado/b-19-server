@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Minimal working example</title>
+  </head>
+  <body>
+    <ul id="events"></ul>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const $events = document.getElementById("events");
+
+      const newItem = (content) => {
+        const item = document.createElement("li");
+        item.innerText = content;
+        return item;
+      };
+
+      const socket = io();
+
+      socket.on("connect", () => {
+        $events.appendChild(newItem(`connect ${new Date(Date.now())}`));
+      });
+
+      //   socket.on("hello", (counter) => {
+      //     $events.appendChild(newItem(`hello - ${counter}`));
+      //   });
+
+      let counter = 0;
+      const interval = setInterval(() => {
+        ++counter;
+        socket.emit("hey", { counter });
+        if (counter == 5) clearInterval(interval);
+      }, 2000);
+    </script>
+  </body>
+</html>
